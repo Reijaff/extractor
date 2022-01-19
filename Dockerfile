@@ -1,27 +1,21 @@
-FROM ubuntu:20.04
+FROM cincan/binwalk
 
-WORKDIR /root
+USER root
 
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y \
-      build-essential \
-      git-core \
-      liblzma-dev \
-      liblzo2-dev \
-      python3-pip \
-      unrar-free \
-      wget \
-      zlib1g-dev && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3 10 # python should be py3
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN git clone -q --depth=1 https://github.com/devttys0/binwalk.git /root/binwalk && \
-    cd /root/binwalk && \
-    ./deps.sh --yes && \
-    python3 ./setup.py install && \
-    pip3 install git+https://github.com/ahupp/python-magic && \
-    pip3 install git+https://github.com/sviehb/jefferson && \
-    pip3 install pylzma # jefferson dependency, needs build-essential
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y wget python3-pip git build-essential liblzma-dev liblzo2-dev zlib1g-dev unrar-free
 
-COPY extractor.py /root/
-WORKDIR /root/
+RUN python3 -m pip install python-magic
+
+
+RUN adduser --disabled-password --gecos '' --home /home/extractor extractor
+
+WORKDIR /home/extractor
+
+RUN git clone https://gitlab.com/reijaff/extractor.git
+RUN ln -s /home/extractor/extractor/extractor.py /usr/bin/extractor
+
+ENTRYPOINT ["extractor"]

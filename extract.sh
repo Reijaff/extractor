@@ -10,11 +10,10 @@ indir=$(realpath $(dirname "${infile}"))
 outdir=$(realpath "${outdir}")
 infilebn=$(basename "${infile}")
 
-docker run --rm -t -i --tmpfs /tmp:rw,size=${mem} \
+docker run --rm -it --tmpfs /tmp:rw,size=${mem} \
   -v "${indir}":/firmware-in:ro \
   -v "${outdir}":/firmware-out \
-  "ddcc/firmadyne-extractor:latest" \
-  fakeroot /home/extractor/extractor/extractor.py \
+  "ghcr.io/reijaff/extractor" \
   -np \
   /firmware-in/"${infilebn}" \
   /firmware-out

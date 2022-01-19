@@ -16,7 +16,8 @@ For the impatients: Dockerize all the things!
 1. Install [Docker](https://docs.docker.com/engine/getstarted/)
 2. Run the dockerized extractor
 ```
-git clone https://github.com/firmadyne/extractor.git
+git clone https://github.com/Reijaff/extractor.git
+docker pull ghcr.io/reijaff/extractor
 cd extractor
 ./extract.sh path/to/firmware.img path/to/output/directory
 ```
